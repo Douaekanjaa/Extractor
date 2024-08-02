@@ -12,31 +12,46 @@
         }
         h1 {
             color: #333;
+            margin-bottom: 20px;
         }
         textarea {
             height: 150px;
             margin-bottom: 10px;
             font-size: 16px;
+            resize: none;
         }
         button {
             margin-right: 10px;
         }
         #output {
-            margin-top: 10px;
+            margin-top: 20px;
             padding: 10px;
             background-color: #fff;
+        }
+        .list-group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .list-group-item button {
+            margin-left: 10px;
+        }
+        .btn-outline-primary:focus, .btn-outline-primary:active {
+            box-shadow: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Session ID Extractor</h1>
+        <h1 class="text-center">Session ID Extractor</h1>
         <div class="form-group">
             <label for="inputText">Input Data:</label>
             <textarea class="form-control" id="inputText" placeholder="Enter your data here..."></textarea>
         </div>
-        <button class="btn btn-primary" onclick="extractSessionIDs()">Extract</button>
-        <button class="btn btn-secondary" id="clearButton" onclick="clearFields()" disabled>Clear</button>
+        <div class="text-center">
+            <button class="btn btn-primary" onclick="extractSessionIDs()">Extract</button>
+            <button class="btn btn-secondary" id="clearButton" onclick="clearFields()" disabled>Clear</button>
+        </div>
         <ul class="list-group mt-3" id="output"></ul>
     </div>
 
@@ -58,7 +73,7 @@
             if (sessionIDs.length > 0) {
                 sessionIDs.forEach(id => {
                     const li = document.createElement('li');
-                    li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                    li.className = 'list-group-item';
                     li.textContent = id;
                     const copyButton = document.createElement('button');
                     copyButton.className = 'btn btn-outline-primary btn-sm';
