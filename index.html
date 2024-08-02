@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session ID Extractor</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+        }
+        textarea {
+            height: 150px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        button {
+            margin-right: 10px;
+        }
+        #output {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Session ID Extractor</h1>
+        <div class="form-group">
+            <label for="inputText">Input Data:</label>
+            <textarea class="form-control" id="inputText" placeholder="Enter your data here..."></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="extractSessionIDs()">Extract</button>
+        <button class="btn btn-secondary" id="clearButton" onclick="clearFields()" disabled>Clear</button>
+        <ul class="list-group mt-3" id="output"></ul>
+    </div>
+
+    <script>
+        function extractSessionIDs() {
+            const inputText = document.getElementById('inputText').value;
+            const lines = inputText.split('\n');
+            const sessionIDs = [];
+            const output = document.getElementById('output');
+
+            lines.forEach(line => {
+                const match = line.match(/sessionid-([a-zA-Z0-9]+)-sessionlength/);
+                if (match) {
+                    sessionIDs.push(match[1]);
+                }
+            });
+
+            output.innerHTML = '';
+            if (sessionIDs.length > 0) {
+                sessionIDs.forEach(id => {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                    li.textContent = id;
+                    const copyButton = document.createElement('button');
+                    copyButton.className = 'btn btn-outline-primary btn-sm';
+                    copyButton.textContent = 'Copy';
+                    copyButton.onclick = () => copySessionID(li, id);
+                    li.appendChild(copyButton);
+                    output.appendChild(li);
+                });
+                document.getElementById('clearButton').disabled = false;
+            } else {
+                const li = document.createElement('li');
+                li.className = 'list-group-item';
+                li.textContent = 'No session IDs found.';
+                output.appendChild(li);
+                document.getElementById('clearButton').disabled = true;
+            }
+        }
+
+        function copySessionID(element, id) {
+            navigator.clipboard.writeText(id).then(() => {
+                element.remove();
+                checkIfOutputIsEmpty();
+            });
+        }
+
+        function clearFields() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('output').innerHTML = '';
+            document.getElementById('clearButton').disabled = true;
+        }
+
+        function checkIfOutputIsEmpty() {
+            const output = document.getElementById('output');
+            if (output.children.length === 0) {
+                document.getElementById('clearButton').disabled = true;
+            }
+        }
+    </script>
+</body>
+</html>
